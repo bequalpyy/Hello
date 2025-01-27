@@ -142,11 +142,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Notify when someone visits the page
     notifyVisit();
 
-    // Add event listeners directly to the buttons
-    document.getElementById('telegramForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        askDoYouKnowMe();
-    });
+    const form = document.getElementById('telegramForm');
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            askDoYouKnowMe();
+        });
+    } else {
+        console.error('Element with ID "telegramForm" not found.');
+    }
 });
 
 function notifyVisit() {
@@ -177,11 +181,25 @@ function askDoYouKnowMe() {
 
     responseDiv.innerHTML = `
         <p class="surprise">✨ Hello, ${name}...! Do you know me? ✨</p>
-        <button class="button" id="friendshipYes" onclick="askFriendship('${name}', '${birthdayMonth}', 'yes')">Yes</button>
-        <button class="button" id="friendshipNo" onclick="askFriendship('${name}', '${birthdayMonth}', 'no')">No</button>
+        <button class="button" onclick="askFriendship('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+        <button class="button" onclick="askFriendship('${name}', '${birthdayMonth}', 'no')">No</button>
     `;
     responseDiv.classList.add('animate'); // Add animation
     console.log('askDoYouKnowMe called with name and birthday:', name, birthdayMonth); // Log statement
+
+    // Check if the name is 'the' and the birthday month is 'july'
+    if (name.toLowerCase() === 'the' && birthdayMonth === 'july') {
+        messageForm.className = ''; // Show message form
+        const messageSubmitButton = document.getElementById('messageSubmit');
+        if (messageSubmitButton) {
+            messageSubmitButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                sendMessage(name, birthdayMonth);
+            });
+        } else {
+            console.error('Element with ID "messageSubmit" not found.');
+        }
+    }
 }
 
 function askFriendship(name, birthdayMonth, answer) {
@@ -195,16 +213,16 @@ function askFriendship(name, birthdayMonth, answer) {
     if (answer === 'yes') {
         responseDiv.innerHTML = `
             <p class="surprise">🌟 Would you like to be my friend? 🌟</p>
-            <button class="button" id="likeSurprisesYes" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'yes')">Yes</button>
-            <button class="button" id="likeSurprisesNo" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'no')">No</button>
+            <button class="button" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+            <button class="button" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'no')">No</button>
         `;
     } else {
         responseDiv.innerHTML = '<p class="surprise">Oh no! Well, let\'s keep chatting anyway. 😊</p>';
         setTimeout(() => {
             responseDiv.innerHTML = `
                 <p class="surprise">🌟 Would you like to be my friend? 🌟</p>
-                <button class="button" id="likeSurprisesYes" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'yes')">Yes</button>
-                <button class="button" id="likeSurprisesNo" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'no')">No</button>
+                <button class="button" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+                <button class="button" onclick="askLikeSurprises('${name}', '${birthdayMonth}', 'no')">No</button>
             `;
             responseDiv.classList.add('animate'); // Add animation
         }, 2000);
@@ -224,8 +242,8 @@ function askLikeSurprises(name, birthdayMonth, answer) {
     if (answer === 'yes') {
         responseDiv.innerHTML = `
             <p class="surprise">✨ Do you like surprises? ✨</p>
-            <button class="button" id="likeToTalkYes" onclick="askLikeToTalk('${name}', '${birthdayMonth}', 'yes')">Yes</button>
-            <button class="button" id="likeToTalkNo" onclick="askLikeToTalk('${name}', '${birthdayMonth}', 'no')">No</button>
+            <button class="button" onclick="askLikeToTalk('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+            <button class="button" onclick="askLikeToTalk('${name}', '${birthdayMonth}', 'no')">No</button>
         `;
     } else {
         responseDiv.innerHTML = '<p class="surprise">Oh, maybe next time! Nice to meet you anyway! 😊</p>';
@@ -245,8 +263,8 @@ function askLikeToTalk(name, birthdayMonth, answer) {
     if (answer === 'yes' || answer === 'no') {
         responseDiv.innerHTML = `
             <p class="surprise">✨ Would you like to talk to me? ✨</p>
-            <button class="button" id="finalResponseYes" onclick="finalResponse('${name}', '${birthdayMonth}', 'yes')">Yes</button>
-            <button class="button" id="finalResponseNo" onclick="finalResponse('${name}', '${birthdayMonth}', 'no')">No</button>
+            <button class="button" onclick="finalResponse('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+            <button class="button" onclick="finalResponse('${name}', '${birthdayMonth}', 'no')">No</button>
         `;
         responseDiv.classList.add('animate'); // Add animation
     }
@@ -263,14 +281,14 @@ function finalResponse(name, birthdayMonth, answer) {
     notifyInteraction('ask_like_to_talk_response', message);
 
     if (answer === 'yes') {
-        if ((name.toLowerCase() === 'the singh' || name.toLowerCase() === 'the') && birthdayMonth === 'july') {
+        if ((name.toLowerCase() === 'the' || name.toLowerCase() === 'the') && birthdayMonth === 'july') {
             const surprises = [
-                '🎁 Here’s a virtual gift for being awesome tthe Singh...! 🎁',
-                '🚀 Keep shining, rge Singh...! You’re out of this world! 🌌',
+                '🎁 Here’s a virtual gift for being awesome The Singh! 🎁',
+                '🚀 Keep shining, The Singh! You’re out of this world! 🌌',
                 '✨ Magic happens when you’re around! ✨'
             ];
             const surpriseMessage = surprises[Math.floor(Math.random() * surprises.length)];
-            responseDiv.innerHTML = `<p class="surprise">✨ Hello! the Singh...! <span class="emoji">👋</span></p><p>${surpriseMessage}</p>`;
+            responseDiv.innerHTML = `<p class="surprise">✨ Hello! The Singh! <span class="emoji">👋</span></p><p>${surpriseMessage}</p>`;
             messageForm.className = ''; // Show message form
         } else {
             responseDiv.innerHTML = '<p class="surprise">🎉 Yay! We are friends now! <span class="emoji">🥳</span></p>';
@@ -280,6 +298,16 @@ function finalResponse(name, birthdayMonth, answer) {
     }
     responseDiv.classList.add('animate'); // Add animation
     console.log('finalResponse called with response:', answer); // Log statement
+}
+
+function sendMessage(name, birthdayMonth) {
+    const messageInput = document.getElementById('messageInput').value.trim();
+    const botToken = '7286669779:AAFwAKGsKQ-HHqYKPumcRkwDtiYzhqWmCAg';
+    const chatId = 5038658970; // Updated with your chat ID
+
+    const message = `Name: ${name}, Birthday Month: ${birthdayMonth}, Message: ${messageInput}`;
+    sendTelegramNotification(botToken, chatId, message);
+    console.log('sendMessage called with message:', message); // Log statement
 }
 
 function notifyInteraction(event, message) {
@@ -310,5 +338,6 @@ function sendTelegramNotification(botToken, chatId, message) {
         console.error('Error sending notification:', error);
     });
 }
+
 
 
