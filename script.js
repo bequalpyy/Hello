@@ -143,10 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
     notifyVisit();
 
     const form = document.getElementById('telegramForm');
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        askDoYouKnowMe();
-    });
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            askDoYouKnowMe();
+        });
+    } else {
+        console.error('Element with ID "telegramForm" not found.');
+    }
 });
 
 function notifyVisit() {
@@ -161,9 +165,7 @@ function askDoYouKnowMe() {
     const name = document.getElementById('nameInput').value.trim();
     const birthdayMonth = document.getElementById('birthdayInput').value.toLowerCase();
     const responseDiv = document.getElementById('response');
-    const messageForm = document.getElementById('messageForm');
     responseDiv.className = ''; // Reset class
-    messageForm.className = 'hidden'; // Hide message form initially
 
     if (name === '' || birthdayMonth === '') {
         responseDiv.innerHTML = '<p class="surprise">👋 Hello, please enter your name and birthday month! 📝</p>';
@@ -181,6 +183,7 @@ function askDoYouKnowMe() {
         <button class="button" onclick="askFriendship('${name}', '${birthdayMonth}', 'no')">No</button>
     `;
     responseDiv.classList.add('animate'); // Add animation
+    console.log('askDoYouKnowMe called with name and birthday:', name, birthdayMonth); // Log statement
 }
 
 function askFriendship(name, birthdayMonth, answer) {
@@ -209,6 +212,76 @@ function askFriendship(name, birthdayMonth, answer) {
         }, 2000);
     }
     responseDiv.classList.add('animate'); // Add animation
+    console.log('askFriendship called with response:', answer); // Log statement
+}
+
+function askLikeSurprises(name, birthdayMonth, answer) {
+    const responseDiv = document.getElementById('response');
+    responseDiv.className = ''; // Reset class
+
+    // Notify the response to the question "Would you like to be my friend?"
+    const message = `Name: ${name}, Birthday Month: ${birthdayMonth}, Response: ${answer}`;
+    notifyInteraction('ask_friendship_response', message);
+
+    if (answer === 'yes') {
+        responseDiv.innerHTML = `
+            <p class="surprise">✨ Do you like surprises? ✨</p>
+            <button class="button" onclick="askLikeToTalk('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+            <button class="button" onclick="askLikeToTalk('${name}', '${birthdayMonth}', 'no')">No</button>
+        `;
+    } else {
+        responseDiv.innerHTML = '<p class="surprise">Oh, maybe next time! Nice to meet you anyway! 😊</p>';
+    }
+    responseDiv.classList.add('animate'); // Add animation
+    console.log('askLikeSurprises called with response:', answer); // Log statement
+}
+
+function askLikeToTalk(name, birthdayMonth, answer) {
+    const responseDiv = document.getElementById('response');
+    responseDiv.className = ''; // Reset class
+
+    // Notify the response to the question "Do you like surprises?"
+    const message = `Name: ${name}, Birthday Month: ${birthdayMonth}, Response: ${answer}`;
+    notifyInteraction('ask_like_surprises_response', message);
+
+    if (answer === 'yes' || answer === 'no') {
+        responseDiv.innerHTML = `
+            <p class="surprise">✨ Would you like to talk to me? ✨</p>
+            <button class="button" onclick="finalResponse('${name}', '${birthdayMonth}', 'yes')">Yes</button>
+            <button class="button" onclick="finalResponse('${name}', '${birthdayMonth}', 'no')">No</button>
+        `;
+        responseDiv.classList.add('animate'); // Add animation
+    }
+    console.log('askLikeToTalk called with response:', answer); // Log statement
+}
+
+function finalResponse(name, birthdayMonth, answer) {
+    const responseDiv = document.getElementById('response');
+    const messageForm = document.getElementById('messageForm');
+    responseDiv.className = ''; // Reset class
+
+    // Notify the response to the question "Would you like to talk to me?"
+    const message = `Name: ${name}, Birthday Month: ${birthdayMonth}, Response: ${answer}`;
+    notifyInteraction('ask_like_to_talk_response', message);
+
+    if (answer === 'yes') {
+        if ((name.toLowerCase() === 'the' || name.toLowerCase() === 'the') && birthdayMonth === 'july') {
+            const surprises = [
+                '🎁 Here’s a virtual gift for being awesome The Singh! 🎁',
+                '🚀 Keep shining, The Singh! You’re out of this world! 🌌',
+                '✨ Magic happens when you’re around! ✨'
+            ];
+            const surpriseMessage = surprises[Math.floor(Math.random() * surprises.length)];
+            responseDiv.innerHTML = `<p class="surprise">✨ Hello! The Singh! <span class="emoji">👋</span></p><p>${surpriseMessage}</p>`;
+            messageForm.className = ''; // Show message form
+        } else {
+            responseDiv.innerHTML = '<p class="surprise">🎉 Yay! We are friends now! <span class="emoji">🥳</span></p>';
+        }
+    } else {
+        responseDiv.innerHTML = '<p class="surprise">Oh, maybe next time! Nice to meet you anyway! 😊</p>';
+    }
+    responseDiv.classList.add('animate'); // Add animation
+    console.log('finalResponse called with response:', answer); // Log statement
 }
 
 function notifyInteraction(event, message) {
@@ -217,6 +290,7 @@ function notifyInteraction(event, message) {
 
     const finalMessage = `${event}: ${message}`;
     sendTelegramNotification(botToken, chatId, finalMessage);
+    console.log(`notifyInteraction called with event: ${event}, message: ${message}`); // Log statement
 }
 
 function sendTelegramNotification(botToken, chatId, message) {
@@ -238,3 +312,4 @@ function sendTelegramNotification(botToken, chatId, message) {
         console.error('Error sending notification:', error);
     });
 }
+
