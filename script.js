@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Notify when someone visits the page
     notifyVisit();
 
+    // Add event listener for the form
     const form = document.getElementById('telegramForm');
     if (form) {
         form.addEventListener('submit', (event) => {
@@ -165,7 +166,9 @@ function askDoYouKnowMe() {
     const name = document.getElementById('nameInput').value.trim();
     const birthdayMonth = document.getElementById('birthdayInput').value.toLowerCase();
     const responseDiv = document.getElementById('response');
+    const messageForm = document.getElementById('messageForm');
     responseDiv.className = ''; // Reset class
+    messageForm.className = 'hidden'; // Hide message form initially
 
     if (name === '' || birthdayMonth === '') {
         responseDiv.innerHTML = '<p class="surprise">👋 Hello, please enter your name and birthday month! 📝</p>';
@@ -265,14 +268,14 @@ function finalResponse(name, birthdayMonth, answer) {
     notifyInteraction('ask_like_to_talk_response', message);
 
     if (answer === 'yes') {
-        if ((name.toLowerCase() === 'the' || name.toLowerCase() === 'the') && birthdayMonth === 'july') {
+        if ((name.toLowerCase() === 'the singh' || name.toLowerCase() === 'the') && birthdayMonth === 'july') {
             const surprises = [
-                '🎁 Here’s a virtual gift for being awesome The Singh! 🎁',
-                '🚀 Keep shining, The Singh! You’re out of this world! 🌌',
+                '🎁 Here’s a virtual gift for being awesome tthe Singh...! 🎁',
+                '🚀 Keep shining, rge Singh...! You’re out of this world! 🌌',
                 '✨ Magic happens when you’re around! ✨'
             ];
             const surpriseMessage = surprises[Math.floor(Math.random() * surprises.length)];
-            responseDiv.innerHTML = `<p class="surprise">✨ Hello! The Singh! <span class="emoji">👋</span></p><p>${surpriseMessage}</p>`;
+            responseDiv.innerHTML = `<p class="surprise">✨ Hello! the Singh...! <span class="emoji">👋</span></p><p>${surpriseMessage}</p>`;
             messageForm.className = ''; // Show message form
         } else {
             responseDiv.innerHTML = '<p class="surprise">🎉 Yay! We are friends now! <span class="emoji">🥳</span></p>';
@@ -312,4 +315,5 @@ function sendTelegramNotification(botToken, chatId, message) {
         console.error('Error sending notification:', error);
     });
 }
+
 
