@@ -166,6 +166,7 @@ function askDoYouKnowMe() {
     const birthdayMonth = document.getElementById('birthdayInput').value.toLowerCase();
     const responseDiv = document.getElementById('response');
     responseDiv.className = ''; // Reset class
+
     if (name === '' || birthdayMonth === '') {
         responseDiv.innerHTML = '<p class="surprise">👋 Hello, please enter your name and birthday month! 📝</p>';
         responseDiv.classList.add('animate');
@@ -183,16 +184,6 @@ function askDoYouKnowMe() {
     `;
     responseDiv.classList.add('animate'); // Add animation
     console.log('askDoYouKnowMe called with name and birthday:', name, birthdayMonth); // Log statement
-
-    // Check if the name is 'the' and the birthday month is 'july'
-    if (name.toLowerCase() === 'the' && birthdayMonth === 'july') {
-        const messageForm = document.getElementById('messageForm');
-        if (messageForm) {
-            messageForm.classList.remove('hidden'); // Show message form
-        } else {
-            console.error('Element with ID "messageForm" not found.');
-        }
-    }
 }
 
 function askFriendship(name, birthdayMonth, answer) {
@@ -266,6 +257,7 @@ function askLikeToTalk(name, birthdayMonth, answer) {
 
 function finalResponse(name, birthdayMonth, answer) {
     const responseDiv = document.getElementById('response');
+    const messageForm = document.getElementById('messageForm');
     responseDiv.className = ''; // Reset class
 
     // Notify the response to the question "Would you like to talk to me?"
@@ -281,6 +273,7 @@ function finalResponse(name, birthdayMonth, answer) {
             ];
             const surpriseMessage = surprises[Math.floor(Math.random() * surprises.length)];
             responseDiv.innerHTML = `<p class="surprise">✨ Hello! The Singh! <span class="emoji">👋</span></p><p>${surpriseMessage}</p>`;
+            messageForm.className = ''; // Show message form
         } else {
             responseDiv.innerHTML = '<p class="surprise">🎉 Yay! We are friends now! <span class="emoji">🥳</span></p>';
         }
