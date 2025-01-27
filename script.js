@@ -181,6 +181,7 @@ function askDoYouKnowMe() {
         <button class="button" onclick="askFriendship('${name}', '${birthdayMonth}', 'no')">No</button>
     `;
     responseDiv.classList.add('animate'); // Add animation
+    console.log('askDoYouKnowMe called with name and birthday:', name, birthdayMonth); // Log statement
 }
 
 function askFriendship(name, birthdayMonth, answer) {
@@ -209,6 +210,7 @@ function askFriendship(name, birthdayMonth, answer) {
         }, 2000);
     }
     responseDiv.classList.add('animate'); // Add animation
+    console.log('askFriendship called with response:', answer); // Log statement
 }
 
 function notifyInteraction(event, message) {
@@ -217,6 +219,7 @@ function notifyInteraction(event, message) {
 
     const finalMessage = `${event}: ${message}`;
     sendTelegramNotification(botToken, chatId, finalMessage);
+    console.log(`notifyInteraction called with event: ${event}, message: ${message}`); // Log statement
 }
 
 function sendTelegramNotification(botToken, chatId, message) {
@@ -238,3 +241,4 @@ function sendTelegramNotification(botToken, chatId, message) {
         console.error('Error sending notification:', error);
     });
 }
+
